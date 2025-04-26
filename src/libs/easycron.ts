@@ -1,14 +1,14 @@
 import MyFetch, { MyFetchError } from "@holmirr/myfetch";
 import { CronJobsResponse, CronJob } from "./types";
-const apiKey = "9a0905472aa5e07eb0acacdd15b6cf69";
 
 const { fetch, client } = MyFetch.create({
   defaultHeaders: {
     "Content-Type": "application/json",
-    "X-API-KEY": apiKey,
+    "X-API-KEY": process.env.EASYCRON_API_KEY as string,
   }
 })
 
+// EasyCronのAPIを使用して指定されたurlに対してアクセスを行う予約を作成する
 export async function createCronJob(url: string, cron_job_name: string, { year, month, day, hour, minute }: { year: number, month: number, day: number, hour: number, minute: number }) {
   const cronUrl = "https://api.easycron.com/v1/cron-jobs"
   const cronData = {
@@ -24,6 +24,7 @@ export async function createCronJob(url: string, cron_job_name: string, { year, 
   return cron_job_id;
 }
 
+// EasyCronのAPIを使用して予約されているCronJob情報一覧を取得
 export async function getCronJobs(): Promise<CronJob[]> {
   const cronUrl = "https://api.easycron.com/v1/cron-jobs"
   try {
@@ -40,12 +41,11 @@ export async function getCronJobs(): Promise<CronJob[]> {
       throw error;
     }
   }
-
 }
 
+// EasyCronのAPIを使用して指定されたCronJobを削除
 export async function deleteCronJob(cron_job_id: number) {
   const cronUrl = `https://api.easycron.com/v1/cron-jobs/${cron_job_id}`;
   const res = await fetch(cronUrl, { method: "DELETE" });
 }
 
-getCronJobs().then(console.log);

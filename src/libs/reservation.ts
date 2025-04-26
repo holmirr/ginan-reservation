@@ -1,6 +1,7 @@
 import MyFetch from "@holmirr/myfetch";
 import * as cheerio from "cheerio";
 
+// デフォルトのヘッダーを作成
 const headers = {
   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "Accept-Encoding": "gzip, deflate, br, zstd",
@@ -22,6 +23,7 @@ const {fetch, client } = MyFetch.create({
   defaultHeaders: headers
 })
 
+// 自動でぎなん皮膚科の予約を行うスクリプト
 export async function getReservation() {
   const res1 = await fetch("https://ginan-skin.mdja.jp/");
   const $1 = cheerio.load(await res1.text());
@@ -40,6 +42,7 @@ export async function getReservation() {
   const href3 = form.attr("action");
   if (!href3) throw new Error("href3 is not found");
 
+  // form中のinput要素を取得してkey=name, value=valueのオブジェクトとして格納
   const data: Record<string, string> = {};
   form.find("input").each((_, el) => {
     const $el = $3(el);
